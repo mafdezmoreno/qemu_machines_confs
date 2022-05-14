@@ -1,13 +1,14 @@
-# Some Tested QEMU VM on M1
+# Some Tested QEMU VM on M1 Apple Silicon
 
 These configurations were tested using the 6.2.0_1 QEMU version.
-Whit the actual version it's not needed to apply the Alexander Graf patch: https://lore.kernel.org/qemu-devel/20210120224444.71840-1-agraf@csgraf.de/
+Whit the actual version it's not needed to apply the Alexander Graf [patch](https://lore.kernel.org/qemu-devel/20210120224444.71840-1-agraf@csgraf.de/)
 
 ## TODOs
 
 __I'm working in the next issues:__
 
-1 - Debian not starting after installation.
+- ssh connection
+- Debian not starting after installation.
 
 ## Requirements
 
@@ -59,6 +60,55 @@ To resolve this problem I followed the instructions of this post:
 ### Ubuntu References
 
 [https://gist.github.com/citruz/9896cd6fb63288ac95f81716756cb9aa](https://gist.github.com/citruz/9896cd6fb63288ac95f81716756cb9aa)
+
+## Raspbian (no desktop)
+
+1. Download the following files from [https://github.com/dhruvvyas90/qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel)
+
+    - kernel-qemu-4.19.50-buster
+    - versatile-pb-buster.dtb
+
+    and a iso file of [Raspbian](http://ftp.jaist.ac.jp/pub/raspberrypi/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28/):
+
+    - 2020-05-27-raspios-buster-lite-armhf.img
+
+    ```bash
+    wget https://github.com/dhruvvyas90/qemu-rpi-kernel/blob/master/kernel-qemu-4.19.50-buster
+
+    wget https://github.com/dhruvvyas90/qemu-rpi-kernel/blob/master/versatile-pb-buster.dtb
+
+    wget http://ftp.jaist.ac.jp/pub/raspberrypi/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28/2020-05-27-raspios-buster-lite-armhf.zip
+
+    ```
+
+2. Convert and expand de file disk
+
+    ```bash
+    qemu-img convert -f raw -O qcow2 2020-05-27-raspios-buster-lite-armhf.img raspbian.qcow
+    
+    qemu-img resize raspbian.qcow +6G
+    ```
+
+3. Run the launch scrip
+
+    ```bash
+    chmod +x run_buster_4_19.sh
+    ./run_buster_4_19.sh
+    ```
+
+4. After the startup, the system ask for the user:
+
+    `pi`
+
+    and the password
+
+    `raspberry`
+
+### References
+
+[https://github.com/dhruvvyas90/qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel)
+[https://blog.agchapman.com/using-qemu-to-emulate-a-raspberry-pi/amp/](https://blog.agchapman.com/using-qemu-to-emulate-a-raspberry-pi/amp/)
+
 
 ## Debian 11 ARM (not working by now)
 
